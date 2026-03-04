@@ -5,15 +5,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import io.ktor.http.isSuccess
 
+import config.ApiConfig
+
 class AuthRepository(private val secureStorage: SecureStorage) {
 
-    // Assuming we use Android emulator locally to Node.js backend
-    // 10.0.2.2 is loopback for Android emulator to localhost
-    private val BASE_URL = "http://10.0.2.2:3000/api/auth"
+    // Using dynamically tunneled url locally to Node.js backend
+    private val BASE_URL = ApiConfig.BASE_URL
 
     suspend fun login(request: LoginRequest): Result<LoginResponse> {
         return try {
-            val response = httpClient.post("$BASE_URL/login") {
+            val response = httpClient.post("$BASE_URL/auth/login") {
                 setBody(request)
             }
             if (response.status.isSuccess()) {

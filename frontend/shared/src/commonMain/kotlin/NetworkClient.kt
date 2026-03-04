@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.Serializable
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
@@ -18,9 +19,13 @@ val httpClient = HttpClient {
     }
     install(HttpTimeout) {
         requestTimeoutMillis = 15000
+        connectTimeoutMillis = 15000
+        socketTimeoutMillis = 15000
     }
     defaultRequest {
         contentType(ContentType.Application.Json)
+        header("Bypass-Tunnel-Remote-Ip", "true")
+        header("User-Agent", "Mozilla/5.0 (Android; Mobile)")
     }
 }
 
@@ -28,4 +33,4 @@ val httpClient = HttpClient {
 data class LoginRequest(val email: String, val password: String)
 
 @Serializable
-data class LoginResponse(val token: String?, val role: String?, val email: String?, val message: String? = null)
+data class LoginResponse(val token: String? = null, val role: String? = null, val email: String? = null, val message: String? = null)

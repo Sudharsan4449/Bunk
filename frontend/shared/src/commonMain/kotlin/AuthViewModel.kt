@@ -9,14 +9,17 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     fun login(email: String, password: String) {
-        if (email.isBlank() || password.isBlank()) {
+        val cleanEmail = email.trim()
+        val cleanPassword = password.trim()
+
+        if (cleanEmail.isBlank() || cleanPassword.isBlank()) {
             _authState.value = AuthState.Error("Fields cannot be empty")
             return
         }
 
         _authState.value = AuthState.Loading
         viewModelScope.launch {
-            val result = repository.login(LoginRequest(email, password))
+            val result = repository.login(LoginRequest(cleanEmail, cleanPassword))
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data != null) {

@@ -25,7 +25,11 @@ const seedAdmin = async () => {
             await admin.save();
             console.log('Admin user seeded successfully');
         } else {
-            console.log('Admin user already exists');
+            console.log('Admin user already exists. Forcing a password reset to password123 to ensure correct hash...');
+            const hashedPassword = await bcrypt.hash('password123', 10);
+            existingAdmin.password = hashedPassword;
+            await existingAdmin.save();
+            console.log('Admin password forcefully reset.');
         }
 
         process.exit(0);
