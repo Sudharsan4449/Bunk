@@ -19,14 +19,21 @@ app.use(cors(corsOptions));
 // Routes
 app.use('/api/auth', authRoutes);
 
-// Health Endpoint
-app.get('/api/health', (req, res) => {
-    res.status(200).send('OK');
-});
-
 // Root Endpoint
 app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the FuelTrack Pro API! The server is running successfully.' });
+    res.json({
+        "status": "FuelTrack Pro Backend Running",
+        "service": "Authentication API",
+        "version": "1.0"
+    });
+});
+
+// Health Endpoint
+app.get('/api/health', (req, res) => {
+    res.json({
+        "status": "OK",
+        "service": "FuelTrack Pro API"
+    });
 });
 
 // Admin seed logic function
@@ -67,11 +74,8 @@ if (MONGO_URI) {
             });
         })
         .catch((err) => {
-            console.error('❌ MongoDB connection failed:', err.message);
-            console.warn('⚠️ Starting server anyway to serve health check, but DB routes will fail.');
-            app.listen(PORT, '0.0.0.0', () => {
-                console.log(`🚀 Server running on port ${PORT} but WITHOUT DATABASE connection.`);
-            });
+            console.error('❌ MongoDB connection failed. Stopping server:', err.message);
+            process.exit(1);
         });
 } else {
     console.log('❌ MONGO_URI is not set. Please add it to .env file.');

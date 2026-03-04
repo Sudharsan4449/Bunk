@@ -14,9 +14,9 @@ actual object ApiConfig {
                     Build.BOARD == "QC_Reference_Phone"
 
             return if (isEmulator) {
-                "http://10.0.2.2:3000/api"
+                "https://fueltrack-backend.onrender.com/api"
             } else {
-                "http://localhost:3000/api" // Localhost works via adb reverse tcp:3000 tcp:3000
+                "https://fueltrack-backend.onrender.com/api" // Physical devices also route strictly to Render backend now
             }
         }
 }
