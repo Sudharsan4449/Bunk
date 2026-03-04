@@ -17,7 +17,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Routes
+const authRoutes = require('./src/routes/authRoutes');
+const creditPartyRoutes = require('./src/routes/creditPartyRoutes');
+const vehicleRoutes = require('./src/routes/vehicleRoutes');
+const creditTransactionRoutes = require('./src/routes/creditTransactionRoutes');
+const paymentRoutes = require('./src/routes/paymentRoutes');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/credit-parties', creditPartyRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/credit-transactions', creditTransactionRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Root Endpoint
 app.get('/', (req, res) => {
