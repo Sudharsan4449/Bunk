@@ -13,7 +13,6 @@ const creditPartySchema = new mongoose.Schema({
     status: { type: String, enum: ['ACTIVE', 'BLOCKED'], default: 'ACTIVE' }
 }, { timestamps: true });
 
-// Prevent generic schema duplicates cleanly
-creditPartySchema.index({ partyId: 1 }, { unique: true });
+
 
 module.exports = mongoose.model('CreditParty', creditPartySchema);

@@ -8,7 +8,6 @@ const vehicleSchema = new mongoose.Schema({
     driverPhone: { type: String }
 }, { timestamps: true });
 
-vehicleSchema.index({ vehicleNumber: 1 }, { unique: true });
 vehicleSchema.index({ partyId: 1 });
 
 module.exports = mongoose.model('Vehicle', vehicleSchema);
