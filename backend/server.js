@@ -24,6 +24,11 @@ app.get('/api/health', (req, res) => {
     res.status(200).send('OK');
 });
 
+// Root Endpoint
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the FuelTrack Pro API! The server is running successfully.' });
+});
+
 // Admin seed logic function
 const seedAdmin = async () => {
     try {
