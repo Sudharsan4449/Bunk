@@ -13,20 +13,31 @@ class AuthRepository(private val secureStorage: SecureStorage) {
     private val BASE_URL = ApiConfig.BASE_URL
 
     suspend fun login(request: LoginRequest): Result<LoginResponse> {
-        return try {
-            val response = httpClient.post("$BASE_URL/auth/login") {
-                setBody(request)
+        var currentAttempt = 0
+        val maxRetries = 2
+        val retryDelay = 1500L
+
+        while (true) {
+            try {
+                val response = httpClient.post("$BASE_URL/auth/login") {
+                    setBody(request)
+                }
+                if (response.status.isSuccess()) {
+                    val data = response.body<LoginResponse>()
+                    data.token?.let { secureStorage.saveToken(it) }
+                    return Result.success(data)
+                } else {
+                    val errorMsg = response.body<LoginResponse>().message ?: "Invalid credentials"
+                    return Result.failure(Exception(errorMsg))
+                }
+            } catch (e: Exception) {
+                if (currentAttempt < maxRetries) {
+                    currentAttempt++
+                    kotlinx.coroutines.delay(retryDelay)
+                } else {
+                    return Result.failure(Exception("Network timeout: Server is sleeping. Pleas try again."))
+                }
             }
-            if (response.status.isSuccess()) {
-                val data = response.body<LoginResponse>()
-                data.token?.let { secureStorage.saveToken(it) }
-                Result.success(data)
-            } else {
-                val errorMsg = response.body<LoginResponse>().message ?: "Invalid credentials"
-                Result.failure(Exception(errorMsg))
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Network error: ${e.message}"))
         }
     }
 

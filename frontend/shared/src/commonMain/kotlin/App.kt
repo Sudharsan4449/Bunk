@@ -13,6 +13,8 @@ fun App() {
     val secureStorage = remember { SecureStorage() }
     val authRepository = remember { AuthRepository(secureStorage) }
     val authViewModel = remember { AuthViewModel(authRepository) }
+    val splashViewModel = remember { SplashViewModel() }
+    val creditPartyViewModel = remember { CreditPartyViewModel(secureStorage) }
 
     FuelTrackTheme {
         var currentScreen by remember {
@@ -22,7 +24,7 @@ fun App() {
         Crossfade(targetState = currentScreen) { screen ->
             when (screen) {
                 is Screen.Splash -> {
-                    SplashScreen(onAnimationEnd = {
+                    SplashScreen(viewModel = splashViewModel, onAnimationEnd = {
                         if (authRepository.isUserLoggedIn()) {
                             currentScreen = Screen.Dashboard
                         } else {
@@ -36,9 +38,13 @@ fun App() {
                     })
                 }
                 is Screen.Dashboard -> {
-                    AdminDashboard(viewModel = authViewModel, onLogout = {
-                        currentScreen = Screen.Login
-                    })
+                    AdminDashboard(
+                        authViewModel = authViewModel, 
+                        creditPartyViewModel = creditPartyViewModel,
+                        onLogout = {
+                            currentScreen = Screen.Login
+                        }
+                    )
                 }
             }
         }

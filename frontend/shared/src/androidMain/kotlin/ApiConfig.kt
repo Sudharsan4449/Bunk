@@ -14,9 +14,9 @@ actual object ApiConfig {
                     Build.BOARD == "QC_Reference_Phone"
 
             return if (isEmulator) {
-                "https://fueltrack-backend.onrender.com/api"
+                "https://fueltrack-backend-8oey.onrender.com/api"
             } else {
-                "https://fueltrack-backend.onrender.com/api" // Physical devices also route strictly to Render backend now
+                "https://fueltrack-backend-8oey.onrender.com/api"
             }
         }
 }
